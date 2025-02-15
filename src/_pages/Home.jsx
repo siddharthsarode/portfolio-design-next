@@ -36,7 +36,7 @@ const Home = () => {
   }, []);
 
   return (
-    <section id="home">
+    <section id="home" className="z-[2]">
       <div className="container mx-auto">
         <div className="flex flex-col gap-5 px-3 pt-10 md:pt-20 md:gap-20 md:items-center md:justify-center md:flex-col lg:flex-row">
           <div ref={imageRef}>
