@@ -59,7 +59,7 @@ const Services = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="pb-20 min-h-screen w-full relative opacity-0"
+      className="pb-20 min-h-screen w-full z-[1] relative md:before:content-[''] lg:before:absolute lg:before:top-0 lg:before:left-0 lg:before:w-1/2 lg:before:h-full before:bg-dark_light before:z-[-1]"
     >
       <div className="container mx-auto">
         <div className="w-full px-3">
