@@ -1,8 +1,13 @@
+"use client";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Button from "@/components/Button";
 import Link from "next/link";
-import React from "react";
 import { FaGithub, FaInstagram, FaHeart } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { name: "Home", link: "#" },
@@ -12,8 +17,28 @@ const navLinks = [
 ];
 
 const Footer = () => {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      footerRef.current,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
+  }, []);
+
   return (
-    <footer id="footer" className="z-[199] mt-10">
+    <footer id="footer" className="z-[199] mt-10" ref={footerRef}>
       <div className="container mx-auto">
         <div className="px-3 lg:w-[70%] lg:mx-auto">
           <div className="bg-card flex flex-col md:px-10 lg:flex-row lg:items-center justify-between lg:p-10 px-5 py-10 gap-10">
@@ -42,7 +67,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="w-full flex flex-col gap-5 justify-between items-center px-3  py-5 bg-card md:flex-row md:px-10">
+        <div className="w-full flex flex-col gap-5 justify-between items-center px-3 py-5 bg-card md:flex-row md:px-10">
           <div>
             <h1 className="text-3xl md:text-4xl text-primary font-bold font-[Actor]">
               Agetha
@@ -50,18 +75,15 @@ const Footer = () => {
           </div>
           <div className="flex items-center text-xl gap-7">
             <Link target="_black" href="https://github.com/siddharthsarode">
-              {" "}
               <FaGithub />
             </Link>
             <Link
               target="_black"
               href="https://www.linkedin.com/in/siddharth-sarode-b7b6b724b/"
             >
-              {" "}
               <FaLinkedin />
             </Link>
             <Link href="https://www.instagram.com/siddharth_3555/">
-              {" "}
               <FaInstagram />
             </Link>
           </div>

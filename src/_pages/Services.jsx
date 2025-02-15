@@ -1,9 +1,14 @@
+"use client";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import React from "react";
 import { CgWebsite } from "react-icons/cg";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdOutlineContentPaste } from "react-icons/md";
 import { LuTriangleRight } from "react-icons/lu";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
@@ -30,10 +35,31 @@ const services = [
 ];
 
 const Services = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      sectionRef.current,
+      { opacity: 0, y: 100 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 90%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+  }, []);
+
   return (
     <section
       id="services"
-      className="pb-20 min-h-screen w-full z-[1] relative md:before:content-[''] lg:before:absolute lg:before:top-0 lg:before:left-0 lg:before:w-1/2 lg:before:h-full before:bg-dark_light before:z-[-1]"
+      ref={sectionRef}
+      className="pb-20 min-h-screen w-full relative opacity-0"
     >
       <div className="container mx-auto">
         <div className="w-full px-3">
@@ -43,12 +69,12 @@ const Services = () => {
                 <div
                   key={item.id}
                   className={`card w-full md:w-[40%] lg:w-1/3 px-8 py-10 flex flex-col gap-3 min-h-80 bg-card ${
-                    item.id % 2 != 0 ? `md:bg-card` : `md:bg-primary`
-                  } `}
+                    item.id % 2 !== 0 ? `md:bg-card` : `md:bg-primary`
+                  }`}
                 >
                   <div
                     className={`text-5xl ${
-                      item.id % 2 != 0 ? `text-primary` : `text-white`
+                      item.id % 2 !== 0 ? `text-primary` : `text-white`
                     }`}
                   >
                     {item.icon}
@@ -57,8 +83,8 @@ const Services = () => {
                   <p className="text-para text-lg">{item.description}</p>
                   <Link
                     href={item.link_url}
-                    className={`flex items-center gap-3 text-primary font-bold ${
-                      item.id % 2 != 0 ? `text-primary` : `text-white`
+                    className={`flex items-center gap-3 font-bold ${
+                      item.id % 2 !== 0 ? `text-primary` : `text-white`
                     }`}
                   >
                     <span>Know more</span>
@@ -78,30 +104,22 @@ const Services = () => {
                 <p>Years Experience</p>
               </div>
               <div className="w-full grid grid-cols-2 place-items-center gap-5 lg:grid-cols-2">
-                <div className="text-center bg-card w-full h-full py-10">
-                  <p className="text-5xl font-bold font-sans text-primary">
-                    60+
-                  </p>
-                  <p>Client</p>
-                </div>
-                <div className="text-center bg-card w-full h-full py-10">
-                  <p className="text-5xl font-bold font-sans text-primary">
-                    08
-                  </p>
-                  <p>Years </p>
-                </div>
-                <div className="text-center bg-card w-full h-full py-10">
-                  <p className="text-5xl font-bold font-sans text-primary">
-                    122+
-                  </p>
-                  <p>Completed Project </p>
-                </div>
-                <div className="text-center bg-card w-full h-full py-10">
-                  <p className="text-5xl font-bold font-sans text-primary">
-                    10
-                  </p>
-                  <p>Achievement</p>
-                </div>
+                {[
+                  { number: "60+", text: "Client" },
+                  { number: "08", text: "Years" },
+                  { number: "122+", text: "Completed Projects" },
+                  { number: "10", text: "Achievements" },
+                ].map((stat, index) => (
+                  <div
+                    key={index}
+                    className="text-center bg-card w-full h-full py-10"
+                  >
+                    <p className="text-5xl font-bold font-sans text-primary">
+                      {stat.number}
+                    </p>
+                    <p>{stat.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

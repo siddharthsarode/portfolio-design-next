@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiMenu2Fill, RiCloseLargeFill } from "react-icons/ri";
+import gsap from "gsap";
 
 const navLinks = [
   { name: "Home", link: "#" },
@@ -12,13 +13,56 @@ const navLinks = [
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const menuRef = useRef(null);
+  const menuItemsRef = useRef([]);
+
+  useEffect(() => {
+    // Navbar animation
+    gsap.from(navRef.current, {
+      duration: 1,
+      y: -50,
+      opacity: 0,
+      ease: "power3.out",
+    });
+
+    // Menu items staggered animation
+    gsap.from(menuItemsRef.current, {
+      duration: 0.8,
+      opacity: 0,
+      y: 20,
+      stagger: 0.2,
+      ease: "power3.out",
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      gsap.to(menuRef.current, {
+        duration: 0.5,
+        x: 0,
+        ease: "power3.out",
+      });
+      gsap.fromTo(
+        menuItemsRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: 0.2, ease: "power3.out" }
+      );
+    } else {
+      gsap.to(menuRef.current, {
+        duration: 0.5,
+        x: "-100%",
+        ease: "power3.inOut",
+      });
+    }
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav>
+    <nav ref={navRef}>
       <div className="container mx-auto">
         <div className="px-3 md:px-10 py-3 flex justify-between items-center">
           <div className="logo">
@@ -30,6 +74,7 @@ const Navbar = () => {
             {navLinks.map((item, idx) => (
               <Link
                 key={idx}
+                ref={(el) => (menuItemsRef.current[idx] = el)}
                 className="hover:text-primary transition-all ease-in-out duration-75"
                 href={item.link}
               >
@@ -45,9 +90,8 @@ const Navbar = () => {
 
           {/* Side menu */}
           <div
-            className={`absolute top-0 px-5 py-5 left-0 w-full h-screen bg-black z-50 transition-all duration-300 ${
-              isMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
+            ref={menuRef}
+            className="fixed top-0 left-0 w-full h-screen bg-black z-50 px-5 py-5 transition-all duration-300 -translate-x-full"
           >
             <div className="flex items-center justify-between">
               <p className="text-3xl">Menu</p>
@@ -59,6 +103,7 @@ const Navbar = () => {
               {navLinks.map((item, idx) => (
                 <Link
                   key={idx}
+                  ref={(el) => (menuItemsRef.current[idx] = el)}
                   className="hover:text-primary transition-all ease-in-out duration-75"
                   href={item.link}
                 >
